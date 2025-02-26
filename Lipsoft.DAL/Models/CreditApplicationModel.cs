@@ -1,4 +1,4 @@
-﻿namespace Lipsoft.BLL.Models;
+﻿namespace Lipsoft.Data.Models;
 
 public record CreditApplicationModel(
     int Id,

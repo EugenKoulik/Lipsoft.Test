@@ -1,5 +1,4 @@
-﻿using Lipsoft.BLL.Models;
-using Lipsoft.Data.Models;
+﻿using Lipsoft.Data.Models;
 
 namespace Lipsoft.BLL.Validators;
 
