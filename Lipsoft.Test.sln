@@ -1,0 +1,28 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Lipsoft.API", "Lipsoft.API\Lipsoft.API.csproj", "{50374FF2-7F39-4B58-AFD9-7265BAD10FB2}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Lipsoft.BLL", "Lipsoft.BLL\Lipsoft.BLL.csproj", "{CCA45D7D-81FF-49EF-8F06-4E81304DD267}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Lipsoft.DAL", "Lipsoft.DAL\Lipsoft.DAL.csproj", "{45C1F8EC-B101-45C4-8FE7-A6DFC8A76D3B}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{50374FF2-7F39-4B58-AFD9-7265BAD10FB2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{50374FF2-7F39-4B58-AFD9-7265BAD10FB2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{50374FF2-7F39-4B58-AFD9-7265BAD10FB2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{50374FF2-7F39-4B58-AFD9-7265BAD10FB2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CCA45D7D-81FF-49EF-8F06-4E81304DD267}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CCA45D7D-81FF-49EF-8F06-4E81304DD267}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CCA45D7D-81FF-49EF-8F06-4E81304DD267}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CCA45D7D-81FF-49EF-8F06-4E81304DD267}.Release|Any CPU.Build.0 = Release|Any CPU
+		{45C1F8EC-B101-45C4-8FE7-A6DFC8A76D3B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{45C1F8EC-B101-45C4-8FE7-A6DFC8A76D3B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{45C1F8EC-B101-45C4-8FE7-A6DFC8A76D3B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{45C1F8EC-B101-45C4-8FE7-A6DFC8A76D3B}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal
