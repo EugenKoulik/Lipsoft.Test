@@ -1,4 +1,5 @@
-﻿using Lipsoft.Data.Models;
+﻿using System.Runtime.CompilerServices;
+using Lipsoft.Data.Models;
 using Lipsoft.Data.Repositories;
 using Microsoft.Data.SqlClient;
 
@@ -6,58 +7,55 @@ namespace Lipsoft.Data.Implementations;
 
 public class ClientRepository : IClientRepository
 {
-    private readonly string _connectionString;
+    private readonly string? _connectionString;
 
-    public ClientRepository(string connectionString)
+    public ClientRepository(string? connectionString)
     {
         _connectionString = connectionString;
     }
 
-    public async Task<IEnumerable<ClientModel>> GetAllClientsAsync()
+    public async IAsyncEnumerable<Client> GetAllClientsAsync([EnumeratorCancellation] CancellationToken cancellationToken = default)
     {
-        var clients = new List<ClientModel>();
-        
         using (var connection = new SqlConnection(_connectionString))
         {
-            await connection.OpenAsync().ConfigureAwait(false);
-            
+            await connection.OpenAsync(cancellationToken).ConfigureAwait(false);
+        
             var command = new SqlCommand("SELECT * FROM Clients", connection);
-            var reader = await command.ExecuteReaderAsync().ConfigureAwait(false);
+            var reader = await command.ExecuteReaderAsync(cancellationToken).ConfigureAwait(false);
 
-            while (await reader.ReadAsync().ConfigureAwait(false))
+            while (await reader.ReadAsync(cancellationToken).ConfigureAwait(false))
             {
-                clients.Add(new ClientModel
+                yield return new Client
                 {
-                    Id = (int)reader["Id"],
+                    Id = (long)reader["Id"],
                     FullName = reader["FullName"].ToString(),
                     Age = (int)reader["Age"],
                     Workplace = reader["Workplace"].ToString(),
                     Phone = reader["Phone"].ToString()
-                });
+                };
             }
         }
-        return clients;
     }
     
-    public async Task<ClientModel?> GetClientByIdAsync(int id)
+    public async Task<Client?> GetClientByIdAsync(long id, CancellationToken cancellationToken)
     {
-        ClientModel? client = null;
+        Client? client = null;
         
         using (var connection = new SqlConnection(_connectionString))
         {
-            await connection.OpenAsync().ConfigureAwait(false);
+            await connection.OpenAsync(cancellationToken).ConfigureAwait(false);
             
             var command = new SqlCommand("SELECT * FROM Clients WHERE Id = @Id", connection);
             
             command.Parameters.AddWithValue("@Id", id);
             
-            var reader = await command.ExecuteReaderAsync().ConfigureAwait(false);
+            var reader = await command.ExecuteReaderAsync(cancellationToken).ConfigureAwait(false);
 
-            if (await reader.ReadAsync().ConfigureAwait(false))
+            if (await reader.ReadAsync(cancellationToken).ConfigureAwait(false))
             {
-                client = new ClientModel
+                client = new Client
                 {
-                    Id = (int)reader["Id"],
+                    Id = (long)reader["Id"],
                     FullName = reader["FullName"].ToString(),
                     Age = (int)reader["Age"],
                     Workplace = reader["Workplace"].ToString(),
@@ -68,11 +66,11 @@ public class ClientRepository : IClientRepository
         return client;
     }
     
-    public async Task AddClientAsync(ClientModel client)
+    public async Task<long> AddClientAsync(Client client, CancellationToken cancellationToken)
     {
         using (var connection = new SqlConnection(_connectionString))
         {
-            await connection.OpenAsync().ConfigureAwait(false);
+            await connection.OpenAsync(cancellationToken).ConfigureAwait(false);
             
             var command = new SqlCommand(
                 "INSERT INTO Clients (FullName, Age, Workplace, Phone) VALUES (@FullName, @Age, @Workplace, @Phone); SELECT SCOPE_IDENTITY();", 
@@ -83,17 +81,17 @@ public class ClientRepository : IClientRepository
             command.Parameters.AddWithValue("@Workplace", client.Workplace);
             command.Parameters.AddWithValue("@Phone", client.Phone);
             
-            var newId = Convert.ToInt32(await command.ExecuteScalarAsync().ConfigureAwait(false));
+            var newId = Convert.ToDouble(await command.ExecuteScalarAsync(cancellationToken).ConfigureAwait(false));
             
-            client.Id = newId;
+            return (long)newId;
         }
     }
     
-    public async Task UpdateClientAsync(ClientModel client)
+    public async Task UpdateClientAsync(Client client, CancellationToken cancellationToken)
     {
         using (var connection = new SqlConnection(_connectionString))
         {
-            await connection.OpenAsync().ConfigureAwait(false);
+            await connection.OpenAsync(cancellationToken).ConfigureAwait(false);
             
             var command = new SqlCommand(
                 "UPDATE Clients SET FullName = @FullName, Age = @Age, Workplace = @Workplace, Phone = @Phone WHERE Id = @Id", 
@@ -105,20 +103,20 @@ public class ClientRepository : IClientRepository
             command.Parameters.AddWithValue("@Workplace", client.Workplace);
             command.Parameters.AddWithValue("@Phone", client.Phone);
 
-            await command.ExecuteNonQueryAsync().ConfigureAwait(false);
+            await command.ExecuteNonQueryAsync(cancellationToken).ConfigureAwait(false);
         }
     }
     
-    public async Task DeleteClientAsync(int id)
+    public async Task DeleteClientAsync(long id, CancellationToken cancellationToken)
     {
         using (var connection = new SqlConnection(_connectionString))
         {
-            await connection.OpenAsync().ConfigureAwait(false);
+            await connection.OpenAsync(cancellationToken).ConfigureAwait(false);
             
             var command = new SqlCommand("DELETE FROM Clients WHERE Id = @Id", connection);
             command.Parameters.AddWithValue("@Id", id);
 
-            await command.ExecuteNonQueryAsync().ConfigureAwait(false);
+            await command.ExecuteNonQueryAsync(cancellationToken).ConfigureAwait(false);
         }
     }
 }

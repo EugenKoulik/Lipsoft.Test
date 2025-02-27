@@ -5,9 +5,9 @@ namespace Lipsoft.BLL.Interfaces;
 
 public interface IClientService
 {
-    Task<BaseServiceResult<ClientModel?>> GetClientById(int id);
-    Task<BaseServiceResult<IEnumerable<ClientModel>>> GetAllClientsAsync();
-    Task<BaseServiceResult<ClientModel?>> AddClient(ClientModel clientModel);
-    Task<BaseServiceResult<ClientModel?>> UpdateClient(ClientModel clientModel);
-    Task<BaseServiceResult<bool>> DeleteClient(int id);
+    Task<BaseServiceResult<Client?>> GetClientById(long id, CancellationToken cancellationToken);
+    Task<BaseServiceResult<IEnumerable<Client>>> GetAllClientsAsync(CancellationToken cancellationToken);
+    Task<BaseServiceResult<long>> AddClient(Client client, CancellationToken cancellationToken);
+    Task<BaseServiceResult<Client?>> UpdateClient(Client client, CancellationToken cancellationToken);
+    Task<BaseServiceResult<bool>> DeleteClient(long id, CancellationToken cancellationToken);
 }

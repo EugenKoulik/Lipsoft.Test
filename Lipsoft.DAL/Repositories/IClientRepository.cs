@@ -4,9 +4,9 @@ namespace Lipsoft.Data.Repositories;
 
 public interface IClientRepository
 {
-    Task<IEnumerable<ClientModel>> GetAllClientsAsync();
-    Task<ClientModel?> GetClientByIdAsync(int id);
-    Task AddClientAsync(ClientModel client);
-    Task UpdateClientAsync(ClientModel client);
-    Task DeleteClientAsync(int id);
+    IAsyncEnumerable<Client> GetAllClientsAsync(CancellationToken cancellationToken = default);
+    Task<Client?> GetClientByIdAsync(long id, CancellationToken cancellationToken);
+    Task<long> AddClientAsync(Client client, CancellationToken cancellationToken);
+    Task UpdateClientAsync(Client client, CancellationToken cancellationToken);
+    Task DeleteClientAsync(long id, CancellationToken cancellationToken);
 }

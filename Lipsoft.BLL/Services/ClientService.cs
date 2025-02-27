@@ -1,4 +1,5 @@
-﻿using Lipsoft.BLL.Interfaces;
+﻿using Lipsoft.BLL.Errors;
+using Lipsoft.BLL.Interfaces;
 using Lipsoft.BLL.Services.Base;
 using Lipsoft.BLL.Validators;
 using Lipsoft.Data.Models;
@@ -15,74 +16,79 @@ public class ClientService : IClientService
         _clientRepository = clientRepository;
     }
 
-    public async Task<BaseServiceResult<ClientModel?>> GetClientById(int id)
+    public async Task<BaseServiceResult<Client?>> GetClientById(long id, CancellationToken cancellationToken)
     {
-        var client = await _clientRepository.GetClientByIdAsync(id);
+        var client = await _clientRepository.GetClientByIdAsync(id, cancellationToken);
 
         if (client == null)
         {
-            return BaseServiceResult<ClientModel?>.Failure("Клиент не найден.");
+            return BaseServiceResult<Client?>.Failure(new NotFoundError("Клиент не найден."));
         }
 
-        return BaseServiceResult<ClientModel?>.Success(client);
+        return BaseServiceResult<Client?>.Success(client);
     }
     
-    public async Task<BaseServiceResult<IEnumerable<ClientModel>>> GetAllClientsAsync()
+    public async Task<BaseServiceResult<IEnumerable<Client>>> GetAllClientsAsync(CancellationToken cancellationToken)
     {
-        var clients = await _clientRepository.GetAllClientsAsync();
+        var clients = new List<Client>();
 
-        return BaseServiceResult<IEnumerable<ClientModel>>.Success(clients);
+        await foreach (var client in _clientRepository.GetAllClientsAsync(cancellationToken))
+        {
+            clients.Add(client);
+        }
+
+        return BaseServiceResult<IEnumerable<Client>>.Success(clients);
     }
     
-    public async Task<BaseServiceResult<ClientModel?>> AddClient(ClientModel clientModel)
+    public async Task<BaseServiceResult<long>> AddClient(Client client, CancellationToken cancellationToken)
     {
-        var validationResult = ClientValidator.Validate(clientModel);
+        var validationResult = ClientValidator.Validate(client);
 
         if (validationResult.Count != 0)
         {
             var errorMessage = string.Join("\n", validationResult);
             
-            return BaseServiceResult<ClientModel?>.Failure(errorMessage);
+            return BaseServiceResult<long>.Failure(new ValidationError(errorMessage));
         }
         
-        await _clientRepository.AddClientAsync(clientModel);
+        var newId = await _clientRepository.AddClientAsync(client, cancellationToken);
 
-        return BaseServiceResult<ClientModel?>.Success(clientModel);
+        return BaseServiceResult<long>.Success(newId);
     }
     
-    public async Task<BaseServiceResult<ClientModel?>> UpdateClient(ClientModel clientModel)
+    public async Task<BaseServiceResult<Client?>> UpdateClient(Client client, CancellationToken cancellationToken)
     {
-        var validationResult = ClientValidator.Validate(clientModel);
+        var validationResult = ClientValidator.Validate(client);
 
         if (validationResult.Count != 0)
         {
             var errorMessage = string.Join("\n", validationResult);
             
-            return BaseServiceResult<ClientModel?>.Failure(errorMessage);
+            return BaseServiceResult<Client?>.Failure(new ValidationError(errorMessage));
         }
 
-        var existingClient = await _clientRepository.GetClientByIdAsync(clientModel.Id);
+        var existingClient = await _clientRepository.GetClientByIdAsync(client.Id, cancellationToken);
 
         if (existingClient == null)
         {
-            return BaseServiceResult<ClientModel?>.Failure("Клиент не найден.");
+            return BaseServiceResult<Client?>.Failure(new NotFoundError("Клиент не найден."));
         }
 
-        await _clientRepository.UpdateClientAsync(clientModel);
+        await _clientRepository.UpdateClientAsync(client, cancellationToken);
         
-        return BaseServiceResult<ClientModel?>.Success(clientModel);
+        return BaseServiceResult<Client?>.Success(client);
     }
     
-    public async Task<BaseServiceResult<bool>> DeleteClient(int id)
+    public async Task<BaseServiceResult<bool>> DeleteClient(long id, CancellationToken cancellationToken)
     {
-        var client = await _clientRepository.GetClientByIdAsync(id);
+        var client = await _clientRepository.GetClientByIdAsync(id, cancellationToken);
 
         if (client == null)
         {
-            return BaseServiceResult<bool>.Failure("Клиент не найден.");
+            return BaseServiceResult<bool>.Failure(new NotFoundError("Клиент не найден."));
         }
 
-        await _clientRepository.DeleteClientAsync(id);
+        await _clientRepository.DeleteClientAsync(id, cancellationToken);
         
         return BaseServiceResult<bool>.Success(true);
     }

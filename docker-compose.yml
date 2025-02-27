@@ -1,0 +1,24 @@
+﻿version: "3"
+
+services:
+  lipsoft-db:
+    image: mcr.microsoft.com/mssql/server:2019-latest
+    restart: always
+    container_name: lipsoft-db
+    environment:
+      ACCEPT_EULA: "Y"
+      SA_PASSWORD: "StrongPass1!"
+      MSSQL_PID: "Express"  
+    ports:
+      - 1433:1433
+    volumes:
+      - sql_data:/var/opt/mssql  
+    networks:
+      - lipsoft-network
+
+volumes:
+  sql_data:
+
+networks:
+  lipsoft-network:
+    driver: bridge
