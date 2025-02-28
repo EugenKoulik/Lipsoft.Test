@@ -1,5 +1,5 @@
 ﻿using Lipsoft.API.Dtos.Requests.CreditProduct;
-using Lipsoft.BLL.Errors;
+using Lipsoft.BLL.Infrastructure.Errors;
 using Lipsoft.BLL.Interfaces;
 using Lipsoft.Data.Models;
 using Microsoft.AspNetCore.Mvc;
@@ -31,23 +31,20 @@ public class CreditProductController : ControllerBase
             return result.Error switch
             {
                 NotFoundError => NotFound(result.Error.Message),
-                _ => BadRequest(result.Error?.Message)
+                _ => StatusCode(StatusCodes.Status500InternalServerError, result.Error?.Message) 
             };
         }
 
-        return Ok(result.Value);
+        return Ok(result.GetValue());
     }
 
-    [HttpGet("all")]
+    [HttpGet("filter")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-    public async Task<IActionResult> GetAllCreditProducts(
-        [FromQuery] int pageNumber = 1,
-        [FromQuery] int pageSize = 10,
-        CancellationToken cancellationToken = default)
+    public async Task<IActionResult> GetAllCreditProducts([FromQuery] int offSet, [FromQuery] int size , CancellationToken cancellationToken = default)
     {
-        var result = await _creditProductService.GetAllCreditProductsAsync(pageNumber, pageSize, cancellationToken);
+        var result = await _creditProductService.GetCreditProductsAsync(offSet, size, cancellationToken);
 
         if (!result.IsSuccess)
         {
@@ -58,26 +55,16 @@ public class CreditProductController : ControllerBase
             };
         }
 
-        return Ok(new
-        {
-            CreditProducts = result.Value.CreditProducts,
-            TotalCount = result.Value.TotalCount,
-            PageNumber = pageNumber,
-            PageSize = pageSize
-        });
+        return Ok(result.GetValue());
     }
 
-    [HttpPost("add")]
+    [HttpPost]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     public async Task<IActionResult> AddCreditProduct([FromBody] AddCreditProductDto addCreditProductDto, CancellationToken cancellationToken)
     {
-        var creditProduct = new CreditProduct
-        {
-            ProductName = addCreditProductDto.ProductName,
-            InterestRate = addCreditProductDto.InterestRate
-        };
+        var creditProduct = addCreditProductDto.ToCreditProduct();
 
         var result = await _creditProductService.AddCreditProductAsync(creditProduct, cancellationToken);
 
@@ -90,22 +77,17 @@ public class CreditProductController : ControllerBase
             };
         }
 
-        return Ok(result.Value);
+        return Ok(result.GetValue());
     }
 
-    [HttpPut("update/{id:long}")]
+    [HttpPut("{id:long}")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-    public async Task<IActionResult> UpdateCreditProduct(int id, [FromBody] UpdateCreditProductDto updateCreditProductDto, CancellationToken cancellationToken)
+    public async Task<IActionResult> UpdateCreditProduct(long id, [FromBody] UpdateCreditProductDto updateCreditProductDto, CancellationToken cancellationToken)
     {
-        var creditProduct = new CreditProduct
-        {
-            Id = id,
-            ProductName = updateCreditProductDto.ProductName,
-            InterestRate = updateCreditProductDto.InterestRate
-        };
+        var creditProduct = updateCreditProductDto.ToCreditProduct(id);
 
         var result = await _creditProductService.UpdateCreditProductAsync(creditProduct, cancellationToken);
 
@@ -119,7 +101,7 @@ public class CreditProductController : ControllerBase
             };
         }
 
-        return Ok(result.Value);
+        return Ok(result.GetValue());
     }
 
     [HttpDelete("{id:long}")]

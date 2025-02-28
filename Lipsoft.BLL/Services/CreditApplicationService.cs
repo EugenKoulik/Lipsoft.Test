@@ -1,6 +1,7 @@
-﻿using Lipsoft.BLL.Errors;
+﻿using System.Transactions;
+using Lipsoft.BLL.Infrastructure;
+using Lipsoft.BLL.Infrastructure.Errors;
 using Lipsoft.BLL.Interfaces;
-using Lipsoft.BLL.Services.Base;
 using Lipsoft.BLL.Validators;
 using Lipsoft.Data.Models;
 using Lipsoft.Data.Repositories;
@@ -18,66 +19,35 @@ public class CreditApplicationService : ICreditApplicationService
         _callService = callService;
     }
 
-    public async Task<BaseServiceResult<(IEnumerable<CreditApplication> CreditApplications, int TotalCount)>> GetCreditApplicationsAsync(
-        LoanPurpose? loanPurpose = null,
-        long? creditProductId = null,
-        decimal? minLoanAmount = null,
-        decimal? maxLoanAmount = null,
-        int pageNumber = 1,
-        int pageSize = 10,
-        CancellationToken cancellationToken = default)
+    public Task<Result<IAsyncEnumerable<CreditApplication>>> GetCreditApplicationsAsync(CreditApplicationFilter filter, CancellationToken cancellationToken)
     {
-        if (pageNumber < 1 || pageSize < 1)
+        var validationResult = CreditApplicationFilterValidator.Validate(filter);
+        
+        if (validationResult.Count != 0)  
         {
-            return BaseServiceResult<(IEnumerable<CreditApplication>, int)>.Failure(
-                new ValidationError("Номер страницы и размер страницы должны быть больше 0."));
+            var errorMessage = string.Join("\n", validationResult);
+            
+            return Task.FromResult(Result<IAsyncEnumerable<CreditApplication>>.Failure(new ValidationError(errorMessage)));
         }
 
-        var result = await _creditApplicationRepository.GetCreditApplicationsAsync(
-            loanPurpose, creditProductId, minLoanAmount, maxLoanAmount, pageNumber, pageSize, cancellationToken);
+        var result = _creditApplicationRepository.GetCreditApplicationsAsync(filter, cancellationToken);
 
-        return BaseServiceResult<(IEnumerable<CreditApplication>, int)>.Success(result);
+        return Task.FromResult(Result<IAsyncEnumerable<CreditApplication>>.Success(result));
     }
 
-    public async Task<BaseServiceResult<CreditApplication?>> GetCreditApplicationByIdAsync(long id, CancellationToken cancellationToken)
+    public async Task<Result<CreditApplication?>> GetCreditApplicationByIdAsync(long id, CancellationToken cancellationToken)
     {
         var creditApplication = await _creditApplicationRepository.GetCreditApplicationByIdAsync(id, cancellationToken);
 
         if (creditApplication == null)
         {
-            return BaseServiceResult<CreditApplication?>.Failure(new NotFoundError("Кредитная заявка не найдена."));
+            return Result<CreditApplication?>.Failure(new NotFoundError("Кредитная заявка не найдена."));
         }
 
-        return BaseServiceResult<CreditApplication?>.Success(creditApplication);
+        return Result<CreditApplication?>.Success(creditApplication);
     }
 
-    public async Task<BaseServiceResult<long>> AddCreditApplicationAsync(CreditApplication creditApplication, CancellationToken cancellationToken)
-    {
-        var validationResult = CreditApplicationValidator.Validate(creditApplication);
-
-        if (validationResult.Count != 0)
-        {
-            var errorMessage = string.Join("\n", validationResult);
-            return BaseServiceResult<long>.Failure(new ValidationError(errorMessage));
-        }
-        
-        var newCreditApplicationId = await _creditApplicationRepository.AddCreditApplicationAsync(creditApplication, cancellationToken);
-
-        var call = new Call
-        {
-            ScheduledDate = DateTime.UtcNow.AddMinutes(10),
-            CallResult = null, 
-            Status = CallStatus.Scheduled 
-        };
-        
-        //TODO продумать логику отката транзакции
-
-        var callResult = await _callService.AddCallAsync(call, cancellationToken); 
-
-        return BaseServiceResult<long>.Success(newCreditApplicationId);
-    }
-
-    public async Task<BaseServiceResult<CreditApplication?>> UpdateCreditApplicationAsync(CreditApplication creditApplication, CancellationToken cancellationToken)
+    public async Task<Result<long>> AddCreditApplicationAsync(CreditApplication creditApplication, CancellationToken cancellationToken)
     {
         var validationResult = CreditApplicationValidator.Validate(creditApplication);
 
@@ -85,32 +55,73 @@ public class CreditApplicationService : ICreditApplicationService
         {
             var errorMessage = string.Join("\n", validationResult);
             
-            return BaseServiceResult<CreditApplication?>.Failure(new ValidationError(errorMessage));
+            return Result<long>.Failure(new ValidationError(errorMessage));
+        }
+
+        using var transactionScope = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled);
+        
+        try
+        {
+            var newCreditApplicationId = await _creditApplicationRepository.AddCreditApplicationAsync(creditApplication, cancellationToken);
+
+            var call = new Call
+            {
+                ScheduledDate = DateTime.UtcNow.AddMinutes(10),
+                CallResult = null,
+                Status = CallStatus.Scheduled
+            };
+
+            var callResult = await _callService.AddCallAsync(call, cancellationToken);
+
+            if (!callResult.IsSuccess)
+            {
+                throw new Exception("Failed to create the call.");
+            }
+
+            transactionScope.Complete();
+
+            return Result<long>.Success(newCreditApplicationId);
+        }
+        catch (Exception ex)
+        {
+            return Result<long>.Failure(new InternalError("Произошла ошибка при создании звонка. Изменения отменены."));
+        }
+    }
+
+    public async Task<Result<CreditApplication?>> UpdateCreditApplicationAsync(CreditApplication creditApplication, CancellationToken cancellationToken)
+    {
+        var validationResult = CreditApplicationValidator.Validate(creditApplication);
+
+        if (validationResult.Count != 0)
+        {
+            var errorMessage = string.Join("\n", validationResult);
+            
+            return Result<CreditApplication?>.Failure(new ValidationError(errorMessage));
         }
 
         var existingCreditApplication = await _creditApplicationRepository.GetCreditApplicationByIdAsync(creditApplication.Id, cancellationToken);
 
         if (existingCreditApplication == null)
         {
-            return BaseServiceResult<CreditApplication?>.Failure(new NotFoundError("Кредитная заявка не найдена."));
+            return Result<CreditApplication?>.Failure(new NotFoundError("Кредитная заявка не найдена."));
         }
 
         await _creditApplicationRepository.UpdateCreditApplicationAsync(creditApplication, cancellationToken);
         
-        return BaseServiceResult<CreditApplication?>.Success(creditApplication);
+        return Result<CreditApplication?>.Success(creditApplication);
     }
 
-    public async Task<BaseServiceResult<bool>> DeleteCreditApplicationAsync(long id, CancellationToken cancellationToken)
+    public async Task<Result<bool>> DeleteCreditApplicationAsync(long id, CancellationToken cancellationToken)
     {
         var creditApplication = await _creditApplicationRepository.GetCreditApplicationByIdAsync(id, cancellationToken);
 
         if (creditApplication == null)
         {
-            return BaseServiceResult<bool>.Failure(new NotFoundError("Кредитная заявка не найдена."));
+            return Result<bool>.Failure(new NotFoundError("Кредитная заявка не найдена."));
         }
 
         await _creditApplicationRepository.DeleteCreditApplicationAsync(id, cancellationToken);
         
-        return BaseServiceResult<bool>.Success(true);
+        return Result<bool>.Success(true);
     }
 }

@@ -1,5 +1,5 @@
 ﻿using Lipsoft.API.Dtos.Requests.Call;
-using Lipsoft.BLL.Errors;
+using Lipsoft.BLL.Infrastructure.Errors;
 using Lipsoft.BLL.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
@@ -17,48 +17,39 @@ public class CallController(ICallService callService) : ControllerBase
     {
         var result = await callService.GetCallByIdAsync(id, cancellationToken);
 
-        if (!result.IsSuccess)
+        if (result.IsFailed)
         {
             return result.Error switch
             {
                 NotFoundError => NotFound(result.Error.Message), 
-                _ => BadRequest(result.Error?.Message) 
+                _ => StatusCode(StatusCodes.Status500InternalServerError, result.Error?.Message) 
             };
         }
     
-        return Ok(result.Value); 
+        return Ok(result.GetValue()); 
     }
     
-    [HttpGet("all")]
+    [HttpGet("filter")]
     [ProducesResponseType(StatusCodes.Status200OK)] 
     [ProducesResponseType(StatusCodes.Status400BadRequest)] 
     [ProducesResponseType(StatusCodes.Status500InternalServerError)] 
-    public async Task<IActionResult> GetAllCalls(
-        [FromQuery] int pageNumber = 1,
-        [FromQuery] int pageSize = 10,
-        CancellationToken cancellationToken = default)
+    public async Task<IActionResult> GetCalls([FromQuery] int offSet, [FromQuery] int size , CancellationToken cancellationToken)
     {
-        var result = await callService.GetAllCallsAsync(pageNumber, pageSize, cancellationToken);
+        var result = await callService.GetCallsAsync(offSet, size, cancellationToken);
     
-        if (!result.IsSuccess)
+        if (result.IsFailed)
         {
             return result.Error switch
             {
                 ValidationError => BadRequest(result.Error.Message), 
-                _ => StatusCode(StatusCodes.Status500InternalServerError, result.Error?.Message) 
+                _ => StatusCode(StatusCodes.Status500InternalServerError, result.Error?.Message)  
             };
         }
 
-        return Ok(new
-        {
-            Calls = result.Value.Calls,
-            TotalCount = result.Value.TotalCount,
-            PageNumber = pageNumber,
-            PageSize = pageSize
-        }); 
+        return Ok(result.GetValue()); 
     }
     
-    [HttpPost("add")]
+    [HttpPost]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)] 
@@ -68,7 +59,7 @@ public class CallController(ICallService callService) : ControllerBase
     
         var result = await callService.AddCallAsync(call, cancellationToken);
     
-        if (!result.IsSuccess)
+        if (result.IsFailed)
         {
             return result.Error switch
             {
@@ -77,10 +68,10 @@ public class CallController(ICallService callService) : ControllerBase
             };
         }
 
-        return Ok(result.Value);
+        return Ok(result.GetValue());
     }
     
-    [HttpPut("update/{id:long}")] 
+    [HttpPut("{id:long}")]
     [ProducesResponseType(StatusCodes.Status200OK)] 
     [ProducesResponseType(StatusCodes.Status400BadRequest)] 
     [ProducesResponseType(StatusCodes.Status404NotFound)] 
@@ -91,7 +82,7 @@ public class CallController(ICallService callService) : ControllerBase
     
         var result = await callService.UpdateCallAsync(call, cancellationToken);
 
-        if (!result.IsSuccess)
+        if (result.IsFailed)
         {
             return result.Error switch
             {
@@ -101,7 +92,7 @@ public class CallController(ICallService callService) : ControllerBase
             };
         }
 
-        return Ok(result.Value); 
+        return Ok(result.GetValue()); 
     }
 
     [HttpDelete("{id:long}")]
@@ -112,7 +103,7 @@ public class CallController(ICallService callService) : ControllerBase
     {
         var result = await callService.DeleteCallAsync(id, cancellationToken);
 
-        if (!result.IsSuccess)
+        if (result.IsFailed)
         {
             return result.Error switch
             {

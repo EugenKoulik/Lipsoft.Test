@@ -2,18 +2,17 @@
 
 public record UpdateCreditProductDto
 {
-    public int Id { get; set; }
     public string? ProductName { get; set; }
     public decimal InterestRate { get; set; }
 }
 
 public static class UpdateCreditProductDtoExtensions
 {
-    public static Data.Models.CreditProduct ToCreditProduct(this UpdateCreditProductDto dto)
+    public static Data.Models.CreditProduct ToCreditProduct(this UpdateCreditProductDto dto, long id)
     {
         return new Data.Models.CreditProduct
         {
-            Id = dto.Id,
+            Id = id,
             ProductName = dto.ProductName,
             InterestRate = dto.InterestRate
         };

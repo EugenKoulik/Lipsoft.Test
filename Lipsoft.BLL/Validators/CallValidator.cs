@@ -17,7 +17,7 @@ public static class CallValidator
             errors.Add("ScheduledDate cannot be in the past.");
         }
         
-        if (!Enum.IsDefined(typeof(CallStatus), call.Status))
+        if (call.Status != null && !Enum.IsDefined(typeof(CallStatus), call.Status))
         {
             errors.Add("Invalid CallStatus.");
         }

@@ -2,7 +2,6 @@
 
 public record AddCreditProductDto
 {
-    public int Id { get; set; }
     public string? ProductName { get; set; }
     public decimal InterestRate { get; set; }
 }
@@ -13,7 +12,6 @@ public static class AddCreditProductDtoExtensions
     {
         return new Data.Models.CreditProduct
         {
-            Id = dto.Id,
             ProductName = dto.ProductName,
             InterestRate = dto.InterestRate
         };

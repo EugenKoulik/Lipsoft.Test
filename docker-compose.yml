@@ -11,14 +11,4 @@ services:
       MSSQL_PID: "Express"  
     ports:
       - 1433:1433
-    volumes:
-      - sql_data:/var/opt/mssql  
-    networks:
-      - lipsoft-network
 
-volumes:
-  sql_data:
-
-networks:
-  lipsoft-network:
-    driver: bridge

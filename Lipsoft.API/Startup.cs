@@ -3,21 +3,15 @@ using Lipsoft.API.Middleware;
 using Lipsoft.API.Swagger;
 using Lipsoft.BLL.Interfaces;
 using Lipsoft.BLL.Services;
+using Lipsoft.Data;
 using Lipsoft.Data.Implementations;
 using Lipsoft.Data.Repositories;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Lipsoft.API;
 
-public class Startup
+public class Startup(IConfiguration configuration)
 {
-    private readonly IConfiguration _configuration;
-
-    public Startup(IConfiguration configuration)
-    {
-        _configuration = configuration;
-    }
-    
     public void ConfigureServices(IServiceCollection services)
     {
         services
@@ -28,22 +22,21 @@ public class Startup
                 options.InvalidModelStateResponseFactory = _ =>
                     new BadRequestObjectResult("Передана невалидная модель для сервера");
             });
-        
-        var connectionString = _configuration.GetConnectionString("DbConnection");
-        
+
+        services.Configure<DbSettings>(configuration.GetSection("DbSettings"));
         services.ConfigureSwagger();
         
         services.AddScoped<IClientService, ClientService>();
-        services.AddScoped<IClientRepository>(_ => new ClientRepository(connectionString));
+        services.AddScoped<IClientRepository, ClientRepository>();
 
         services.AddScoped<ICallService, CallService>();
-        services.AddScoped<ICallRepository>(_ => new CallRepository(connectionString));
+        services.AddScoped<ICallRepository, CallRepository>();
 
         services.AddScoped<ICreditApplicationService, CreditApplicationService>();
-        services.AddScoped<ICreditApplicationRepository>(_ => new CreditApplicationRepository(connectionString));
+        services.AddScoped<ICreditApplicationRepository, CreditApplicationRepository>();
 
         services.AddScoped<ICreditProductService, CreditProductService>();
-        services.AddScoped<ICreditProductRepository>(_ => new CreditProductRepository(connectionString));
+        services.AddScoped<ICreditProductRepository, CreditProductRepository>();
     }
 
     public void Configure(IApplicationBuilder app, IWebHostEnvironment env)

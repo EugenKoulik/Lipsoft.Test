@@ -1,7 +1,6 @@
 ﻿using Lipsoft.API.Dtos.Requests.CreditApplication;
-using Lipsoft.BLL.Errors;
+using Lipsoft.BLL.Infrastructure.Errors;
 using Lipsoft.BLL.Interfaces;
-using Lipsoft.Data.Models;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Lipsoft.API.Controllers;
@@ -30,36 +29,21 @@ public class CreditApplicationController : ControllerBase
             return result.Error switch
             {
                 NotFoundError => NotFound(result.Error.Message), 
-                _ => BadRequest(result.Error?.Message) 
+                _ => StatusCode(StatusCodes.Status500InternalServerError, result.Error?.Message) 
             };
         }
     
-        return Ok(result.Value); 
+        return Ok(result.GetValue()); 
     }
     
-    [HttpGet("all")]
-    [ProducesResponseType(StatusCodes.Status200OK)] 
-    [ProducesResponseType(StatusCodes.Status400BadRequest)] 
-    [ProducesResponseType(StatusCodes.Status500InternalServerError)] 
-    public async Task<IActionResult> GetCreditApplications(
-        [FromQuery] LoanPurpose? loanPurpose = null,
-        [FromQuery] long? creditProductId = null,
-        [FromQuery] decimal? minLoanAmount = null,
-        [FromQuery] decimal? maxLoanAmount = null,
-        [FromQuery] int pageNumber = 1,
-        [FromQuery] int pageSize = 10,
-        CancellationToken cancellationToken = default)
+    [HttpPost("filter")]
+    public async Task<IActionResult> GetCreditApplications([FromBody] CreditApplicationFilterDto filterDto, CancellationToken cancellationToken = default)
     {
-        var result = await _creditApplicationService.GetCreditApplicationsAsync(
-            loanPurpose,
-            creditProductId,
-            minLoanAmount,
-            maxLoanAmount,
-            pageNumber,
-            pageSize,
-            cancellationToken);
+        var filter = filterDto.ToCreditApplicationFilter();
+        
+        var result = await _creditApplicationService.GetCreditApplicationsAsync(filter, cancellationToken);
     
-        if (!result.IsSuccess)
+        if (result.IsFailed)
         {
             return result.Error switch
             {
@@ -68,16 +52,10 @@ public class CreditApplicationController : ControllerBase
             };
         }
 
-        return Ok(new
-        {
-            CreditApplications = result.Value.CreditApplications,
-            TotalCount = result.Value.TotalCount,
-            PageNumber = pageNumber,
-            PageSize = pageSize
-        }); 
+        return Ok(result.GetValue()); 
     }
     
-    [HttpPost("add")]
+    [HttpPost]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)] 
@@ -96,17 +74,17 @@ public class CreditApplicationController : ControllerBase
             };
         }
 
-        return Ok(result.Value);
+        return Ok(result.GetValue());
     }
     
-    [HttpPut("update/{id:long}")] 
+    [HttpPut("{id:long}")] 
     [ProducesResponseType(StatusCodes.Status200OK)] 
     [ProducesResponseType(StatusCodes.Status400BadRequest)] 
     [ProducesResponseType(StatusCodes.Status404NotFound)] 
     [ProducesResponseType(StatusCodes.Status500InternalServerError)] 
-    public async Task<IActionResult> UpdateCreditApplication(int id, [FromBody] UpdateCreditApplicationDto updateCreditApplicationDto, CancellationToken cancellationToken)
+    public async Task<IActionResult> UpdateCreditApplication(long id, [FromBody] UpdateCreditApplicationDto updateCreditApplicationDto, CancellationToken cancellationToken)
     {
-        var creditApplication = updateCreditApplicationDto.ToCreditApplication();
+        var creditApplication = updateCreditApplicationDto.ToCreditApplication(id);
     
         var result = await _creditApplicationService.UpdateCreditApplicationAsync(creditApplication, cancellationToken);
 
@@ -120,7 +98,7 @@ public class CreditApplicationController : ControllerBase
             };
         }
 
-        return Ok(result.Value); 
+        return Ok(result.GetValue()); 
     }
 
     [HttpDelete("{id:long}")]

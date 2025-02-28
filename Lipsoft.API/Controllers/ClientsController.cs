@@ -1,5 +1,5 @@
 ﻿using Lipsoft.API.Dtos.Requests.Client;
-using Lipsoft.BLL.Errors;
+using Lipsoft.BLL.Infrastructure.Errors;
 using Lipsoft.BLL.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
@@ -17,34 +17,19 @@ public class ClientsController(IClientService clientService) : ControllerBase
     {
         var result = await clientService.GetClientById(id, cancellationToken);
 
-        if (!result.IsSuccess)
+        if (result.IsFailed)
         {
             return result.Error switch
             {
                 NotFoundError => NotFound(result.Error.Message), 
-                _ => BadRequest(result.Error?.Message) 
+                _ => StatusCode(StatusCodes.Status500InternalServerError, result.Error?.Message) 
             };
         }
     
-        return Ok(result.Value); 
+        return Ok(result.GetValue()); 
     }
     
-    [HttpGet("all")]
-    [ProducesResponseType(StatusCodes.Status200OK)] 
-    [ProducesResponseType(StatusCodes.Status500InternalServerError)] 
-    public async Task<IActionResult> GetAllClients(CancellationToken cancellationToken)
-    {
-        var result = await clientService.GetAllClientsAsync(cancellationToken);
-    
-        if (!result.IsSuccess)
-        {
-            return StatusCode(StatusCodes.Status500InternalServerError, result.Error?.Message);
-        }
-
-        return Ok(result.Value); 
-    }
-    
-    [HttpPost("add")]
+    [HttpPost]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)] 
@@ -54,7 +39,7 @@ public class ClientsController(IClientService clientService) : ControllerBase
     
         var result = await clientService.AddClient(client, cancellationToken);
     
-        if (!result.IsSuccess)
+        if (result.IsFailed)
         {
             return result.Error switch
             {
@@ -63,10 +48,10 @@ public class ClientsController(IClientService clientService) : ControllerBase
             };
         }
 
-        return Ok(result.Value);
+        return Ok(result.GetValue());
     }
     
-    [HttpPut("update/{id:long}")] 
+    [HttpPut("{id:long}")] 
     [ProducesResponseType(StatusCodes.Status200OK)] 
     [ProducesResponseType(StatusCodes.Status400BadRequest)] 
     [ProducesResponseType(StatusCodes.Status404NotFound)] 
@@ -77,7 +62,7 @@ public class ClientsController(IClientService clientService) : ControllerBase
     
         var result = await clientService.UpdateClient(client, cancellationToken);
 
-        if (!result.IsSuccess)
+        if (result.IsFailed)
         {
             return result.Error switch
             {
@@ -87,7 +72,7 @@ public class ClientsController(IClientService clientService) : ControllerBase
             };
         }
 
-        return Ok(result.Value); 
+        return Ok(result.GetValue()); 
     }
 
     [HttpDelete("{id:long}")]
@@ -98,7 +83,7 @@ public class ClientsController(IClientService clientService) : ControllerBase
     {
         var result = await clientService.DeleteClient(id, cancellationToken);
 
-        if (!result.IsSuccess)
+        if (result.IsFailed)
         {
             return result.Error switch
             {

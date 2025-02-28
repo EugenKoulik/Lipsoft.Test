@@ -1,10 +1,10 @@
 -- Таблица Clients
 CREATE TABLE Clients (
     Id BIGINT IDENTITY(1,1) PRIMARY KEY,
-    FullName VARCHAR(100) NOT NULL,
+    FullName VARCHAR(100),
     Age INT NOT NULL,
-    Workplace VARCHAR(100) NOT NULL,
-    Phone VARCHAR(20) NOT NULL
+    Workplace VARCHAR(100),
+    Phone VARCHAR(20)
 );
 
 -- Индексы для таблицы Clients
@@ -16,14 +16,14 @@ END;
 -- Таблица CreditProducts
 CREATE TABLE CreditProducts (
     Id BIGINT IDENTITY(1,1) PRIMARY KEY,
-    ProductName VARCHAR(100) NOT NULL,
+    ProductName VARCHAR(100),
     InterestRate DECIMAL(5,2) NOT NULL
 );
 
 -- Таблица CreditApplications
 CREATE TABLE CreditApplications (
     Id BIGINT IDENTITY(1,1) PRIMARY KEY,
-    LoanPurpose VARCHAR(200) NOT NULL,
+    LoanPurpose VARCHAR(200),
     LoanAmount DECIMAL(18,2) NOT NULL,
     ClientIncome DECIMAL(18,2) NOT NULL,
     CreditProductId BIGINT NOT NULL, 

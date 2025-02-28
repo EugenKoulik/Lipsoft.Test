@@ -12,10 +12,11 @@ public record UpdateCreditApplicationDto
 
 public static class UpdateCreditApplicationDtoExtensions
 {
-    public static Data.Models.CreditApplication ToCreditApplication(this UpdateCreditApplicationDto dto)
+    public static Data.Models.CreditApplication ToCreditApplication(this UpdateCreditApplicationDto dto, long id)
     {
         return new Data.Models.CreditApplication
         {
+            Id = id,
             LoanPurpose = dto.LoanPurpose,
             LoanAmount = dto.LoanAmount,
             ClientIncome = dto.ClientIncome,
