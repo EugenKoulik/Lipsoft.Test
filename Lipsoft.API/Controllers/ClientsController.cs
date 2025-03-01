@@ -1,6 +1,7 @@
 ﻿using Lipsoft.API.Dtos.Requests.Client;
 using Lipsoft.BLL.Infrastructure.Errors;
 using Lipsoft.BLL.Interfaces;
+using Lipsoft.Data.Models;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Lipsoft.API.Controllers;
@@ -10,10 +11,10 @@ namespace Lipsoft.API.Controllers;
 public class ClientsController(IClientService clientService) : ControllerBase
 {
     [HttpGet("{id:long}")]
-    [ProducesResponseType(StatusCodes.Status200OK)] 
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(Client))] 
     [ProducesResponseType(StatusCodes.Status400BadRequest)] 
     [ProducesResponseType(StatusCodes.Status404NotFound)] 
-    public async Task<IActionResult> GetClient(long id, CancellationToken cancellationToken)
+    public async Task<ActionResult<Client>> GetClient([FromRoute] long id, CancellationToken cancellationToken)
     {
         var result = await clientService.GetClientById(id, cancellationToken);
 
@@ -26,14 +27,14 @@ public class ClientsController(IClientService clientService) : ControllerBase
             };
         }
     
-        return Ok(result.GetValue()); 
+        return Ok(result.Value); 
     }
     
     [HttpPost]
-    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(long))] 
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)] 
-    public async Task<IActionResult> AddClient([FromBody] AddClientDto addClientDto, CancellationToken cancellationToken)
+    public async Task<ActionResult<long>> AddClient([FromBody] AddClientDto addClientDto, CancellationToken cancellationToken)
     {
         var client = addClientDto.ToClient();
     
@@ -48,15 +49,15 @@ public class ClientsController(IClientService clientService) : ControllerBase
             };
         }
 
-        return Ok(result.GetValue());
+        return Ok(result.Value);
     }
     
     [HttpPut("{id:long}")] 
-    [ProducesResponseType(StatusCodes.Status200OK)] 
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(Client))] 
     [ProducesResponseType(StatusCodes.Status400BadRequest)] 
     [ProducesResponseType(StatusCodes.Status404NotFound)] 
     [ProducesResponseType(StatusCodes.Status500InternalServerError)] 
-    public async Task<IActionResult> UpdateClient(long id, [FromBody] UpdateClientDto updateClientDto, CancellationToken cancellationToken)
+    public async Task<ActionResult<Client>> UpdateClient([FromRoute] long id, [FromBody] UpdateClientDto updateClientDto, CancellationToken cancellationToken)
     {
         var client = updateClientDto.ToClient(id);
     
@@ -72,14 +73,14 @@ public class ClientsController(IClientService clientService) : ControllerBase
             };
         }
 
-        return Ok(result.GetValue()); 
+        return Ok(result.Value); 
     }
 
     [HttpDelete("{id:long}")]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-    public async Task<IActionResult> DeleteClient(long id, CancellationToken cancellationToken)
+    public async Task<IActionResult> DeleteClient([FromRoute] long id, CancellationToken cancellationToken)
     {
         var result = await clientService.DeleteClient(id, cancellationToken);
 

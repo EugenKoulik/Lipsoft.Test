@@ -1,6 +1,7 @@
 ﻿using System.Transactions;
 using Lipsoft.BLL.Infrastructure;
 using Lipsoft.BLL.Infrastructure.Errors;
+using Lipsoft.BLL.Infrastructure.Models;
 using Lipsoft.BLL.Interfaces;
 using Lipsoft.BLL.Validators;
 using Lipsoft.Data.Models;

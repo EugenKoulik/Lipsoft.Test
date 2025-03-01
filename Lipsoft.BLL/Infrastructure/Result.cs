@@ -44,13 +44,17 @@ public class Result<T>
         Error = error;
     }
     
-    public T? GetValue()
+    public T? Value
     {
-        if (!IsSuccess)
+        get
         {
-            throw new InvalidOperationException("Cannot access Value because the result is a failure.");
+            if (!IsSuccess)
+            {
+                throw new InvalidOperationException("Cannot access Value because the result is a failure.");
+            }
+            
+            return _value;
         }
-        return _value;
     }
 
     public static Result<T> Success(T value)
