@@ -3,35 +3,35 @@
 public class Client
 {
     /// <summary>
-    /// Unique identifier for the client.
-    /// Used to uniquely identify the client in the system.
+    /// Уникальный идентификатор клиента.
+    /// Используется для уникальной идентификации клиента в системе.
     /// </summary>
     public long Id { get; set; }
 
     /// <summary>
-    /// The full name of the client.
-    /// Contains the first name, last name, and optionally the middle name.
-    /// Can be null if the full name is not provided.
+    /// Полное имя клиента.
+    /// Содержит имя, фамилию и, при необходимости, отчество.
+    /// Может быть null, если полное имя не указано.
     /// </summary>
     public string? FullName { get; set; }
 
     /// <summary>
-    /// The age of the client.
-    /// Represents the client's age in years.
+    /// Возраст клиента.
+    /// Представляет возраст клиента в годах.
     /// </summary>
     public int Age { get; set; }
 
     /// <summary>
-    /// The workplace of the client.
-    /// Contains the name of the organization or company where the client works.
-    /// Can be null if the workplace is not specified.
+    /// Место работы клиента.
+    /// Содержит название организации или компании, где работает клиент.
+    /// Может быть null, если место работы не указано.
     /// </summary>
     public string? Workplace { get; set; }
 
     /// <summary>
-    /// The phone number of the client.
-    /// Contains the contact phone number in a string format.
-    /// Can be null if the phone number is not provided.
+    /// Номер телефона клиента.
+    /// Содержит контактный номер телефона в строковом формате.
+    /// Может быть null, если номер телефона не указан.
     /// </summary>
     public string? Phone { get; set; }
 }

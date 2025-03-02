@@ -1,27 +1,27 @@
 ﻿namespace Lipsoft.Data.Models;
 
 /// <summary>
-/// Represents the possible purposes for a loan.
+/// Представляет возможные цели кредита.
 /// </summary>
 public enum LoanPurpose
 {
     /// <summary>
-    /// The loan is for home improvement purposes.
+    /// Кредит предназначен для улучшения жилья.
     /// </summary>
     HomeImprovement,
 
     /// <summary>
-    /// The loan is for purchasing a car.
+    /// Кредит предназначен для покупки автомобиля.
     /// </summary>
     CarPurchase,
 
     /// <summary>
-    /// The loan is for debt consolidation.
+    /// Кредит предназначен для консолидации долгов.
     /// </summary>
     DebtConsolidation,
 
     /// <summary>
-    /// The loan is for educational purposes.
+    /// Кредит предназначен для образовательных целей.
     /// </summary>
     Education
 }

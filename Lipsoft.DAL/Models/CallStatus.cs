@@ -1,27 +1,27 @@
 ﻿namespace Lipsoft.Data.Models;
 
 /// <summary>
-/// Represents the possible statuses of a call.
+/// Представляет возможные статусы звонка.
 /// </summary>
 public enum CallStatus
 {
     /// <summary>
-    /// The call is scheduled.
+    /// Звонок запланирован.
     /// </summary>
     Scheduled,
 
     /// <summary>
-    /// The call is in progress.
+    /// Звонок в процессе.
     /// </summary>
     InProgress,
 
     /// <summary>
-    /// The call is completed.
+    /// Звонок завершен.
     /// </summary>
     Completed,
 
     /// <summary>
-    /// The call is cancelled.
+    /// Звонок отменен.
     /// </summary>
     Cancelled
 }

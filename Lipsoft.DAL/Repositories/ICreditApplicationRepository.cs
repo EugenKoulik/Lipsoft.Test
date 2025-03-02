@@ -3,47 +3,47 @@
 namespace Lipsoft.Data.Repositories;
 
 /// <summary>
-/// Defines the contract for the repository responsible for managing credit application data.
+/// Определяет контракт для репозитория, ответственного за управление данными заявок на кредит.
 /// </summary>
 public interface ICreditApplicationRepository
 {
     /// <summary>
-    /// Retrieves a list of credit applications based on the provided filter asynchronously.
+    /// Асинхронно извлекает список заявок на кредит на основе предоставленного фильтра.
     /// </summary>
-    /// <param name="filter">The filter criteria used to retrieve the credit applications.</param>
-    /// <param name="cancellationToken">A token to monitor for cancellation requests.</param>
-    /// <returns>A task representing the asynchronous operation, with an <see cref="IAsyncEnumerable{CreditApplication}"/> as the result.</returns>
+    /// <param name="filter">Критерии фильтрации, используемые для извлечения заявок на кредит.</param>
+    /// <param name="cancellationToken">Токен для отслеживания запросов на отмену.</param>
+    /// <returns>Задача, представляющая асинхронную операцию, с результатом в виде <see cref="IAsyncEnumerable{CreditApplication}"/>.</returns>
     IAsyncEnumerable<CreditApplication> GetCreditApplicationsAsync(CreditApplicationFilter filter, CancellationToken cancellationToken);
 
     /// <summary>
-    /// Retrieves a specific credit application by its ID asynchronously.
+    /// Асинхронно извлекает конкретную заявку на кредит по её ID.
     /// </summary>
-    /// <param name="id">The ID of the credit application to retrieve.</param>
-    /// <param name="cancellationToken">A token to monitor for cancellation requests.</param>
-    /// <returns>A task representing the asynchronous operation, with a <see cref="CreditApplication"/> as the result, or null if not found.</returns>
+    /// <param name="id">ID заявки на кредит, которую нужно извлечь.</param>
+    /// <param name="cancellationToken">Токен для отслеживания запросов на отмену.</param>
+    /// <returns>Задача, представляющая асинхронную операцию, с результатом в виде <see cref="CreditApplication"/> или null, если не найдено.</returns>
     Task<CreditApplication?> GetCreditApplicationByIdAsync(long id, CancellationToken cancellationToken);
 
     /// <summary>
-    /// Adds a new credit application record to the database asynchronously. 
+    /// Асинхронно добавляет новую заявку на кредит в базу данных.
     /// </summary>
-    /// <param name="creditApplication">The <see cref="CreditApplication"/> object to be added.</param>
-    /// <param name="cancellationToken">A token to monitor for cancellation requests.</param>
-    /// <returns>A task representing the asynchronous operation, with the ID of the newly created credit application as the result.</returns>
+    /// <param name="creditApplication">Объект <see cref="CreditApplication"/>, который нужно добавить.</param>
+    /// <param name="cancellationToken">Токен для отслеживания запросов на отмену.</param>
+    /// <returns>Задача, представляющая асинхронную операцию, с ID новой заявки на кредит в качестве результата.</returns>
     Task<long> AddCreditApplicationAsync(CreditApplication creditApplication, CancellationToken cancellationToken);
 
     /// <summary>
-    /// Updates an existing credit application record in the database asynchronously.
+    /// Асинхронно обновляет существующую заявку на кредит в базе данных.
     /// </summary>
-    /// <param name="creditApplication">The <see cref="CreditApplication"/> object containing updated data.</param>
-    /// <param name="cancellationToken">A token to monitor for cancellation requests.</param>
-    /// <returns>A task representing the asynchronous operation.</returns>
+    /// <param name="creditApplication">Объект <see cref="CreditApplication"/>, содержащий обновленные данные.</param>
+    /// <param name="cancellationToken">Токен для отслеживания запросов на отмену.</param>
+    /// <returns>Задача, представляющая асинхронную операцию.</returns>
     Task UpdateCreditApplicationAsync(CreditApplication creditApplication, CancellationToken cancellationToken);
 
     /// <summary>
-    /// Deletes a specific credit application record by its ID asynchronously.
+    /// Асинхронно удаляет конкретную заявку на кредит по её ID.
     /// </summary>
-    /// <param name="id">The ID of the credit application to delete.</param>
-    /// <param name="cancellationToken">A token to monitor for cancellation requests.</param>
-    /// <returns>A task representing the asynchronous operation.</returns>
+    /// <param name="id">ID заявки на кредит, которую нужно удалить.</param>
+    /// <param name="cancellationToken">Токен для отслеживания запросов на отмену.</param>
+    /// <returns>Задача, представляющая асинхронную операцию.</returns>
     Task DeleteCreditApplicationAsync(long id, CancellationToken cancellationToken);
 }

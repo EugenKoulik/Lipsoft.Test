@@ -4,8 +4,8 @@ public static class PaginationValidator
 {
     public static List<string> Validate(int offset, int size)
     {
-        var maxPageSize = 1000; 
-        var maxPageOffset = 100000; 
+        const int maxPageSize = 1000; 
+        const int maxPageOffset = 100000; 
         
         var errors = new List<string>();
     

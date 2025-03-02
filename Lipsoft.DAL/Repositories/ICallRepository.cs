@@ -3,48 +3,48 @@
 namespace Lipsoft.Data.Repositories;
 
 /// <summary>
-/// Defines the contract for the repository responsible for managing call data.
+/// Определяет контракт для репозитория, ответственного за управление данными о звонках.
 /// </summary>
 public interface ICallRepository
 {
     /// <summary>
-    /// Retrieves a paginated list of calls asynchronously.
+    /// Асинхронно извлекает список звонков с пагинацией.
     /// </summary>
-    /// <param name="offset">The number of records to skip for pagination.</param>
-    /// <param name="size">The number of records to retrieve.</param>
-    /// <param name="cancellationToken">A token to monitor for cancellation requests.</param>
-    /// <returns>An asynchronous stream of <see cref="Call"/> entities.</returns>
+    /// <param name="offset">Количество записей, которые нужно пропустить для пагинации.</param>
+    /// <param name="size">Количество записей для извлечения.</param>
+    /// <param name="cancellationToken">Токен для отслеживания запросов на отмену.</param>
+    /// <returns>Асинхронный поток сущностей <see cref="Call"/>.</returns>
     IAsyncEnumerable<Call> GetCallsAsync(int offset, int size, CancellationToken cancellationToken);
 
     /// <summary>
-    /// Retrieves a specific call by its ID asynchronously.
+    /// Асинхронно извлекает конкретный звонок по его ID.
     /// </summary>
-    /// <param name="id">The ID of the call to retrieve.</param>
-    /// <param name="cancellationToken">A token to monitor for cancellation requests.</param>
-    /// <returns>A task representing the asynchronous operation, with a <see cref="Call"/> as the result, or null if not found.</returns>
+    /// <param name="id">ID звонка, который нужно извлечь.</param>
+    /// <param name="cancellationToken">Токен для отслеживания запросов на отмену.</param>
+    /// <returns>Задача, представляющая асинхронную операцию, с результатом в виде <see cref="Call"/> или null, если не найдено.</returns>
     Task<Call?> GetCallByIdAsync(long id, CancellationToken cancellationToken);
 
     /// <summary>
-    /// Adds a new call record to the database asynchronously.
+    /// Асинхронно добавляет новый записанный звонок в базу данных.
     /// </summary>
-    /// <param name="call">The <see cref="Call"/> object to be added.</param>
-    /// <param name="cancellationToken">A token to monitor for cancellation requests.</param>
-    /// <returns>A task representing the asynchronous operation, with the ID of the newly created call as the result.</returns>
+    /// <param name="call">Объект <see cref="Call"/>, который нужно добавить.</param>
+    /// <param name="cancellationToken">Токен для отслеживания запросов на отмену.</param>
+    /// <returns>Задача, представляющая асинхронную операцию, с ID нового звонка в качестве результата.</returns>
     Task<long> AddCallAsync(Call call, CancellationToken cancellationToken);
 
     /// <summary>
-    /// Updates an existing call record in the database asynchronously.
+    /// Асинхронно обновляет существующий записанный звонок в базе данных.
     /// </summary>
-    /// <param name="call">The <see cref="Call"/> object containing updated data.</param>
-    /// <param name="cancellationToken">A token to monitor for cancellation requests.</param>
-    /// <returns>A task representing the asynchronous operation.</returns>
+    /// <param name="call">Объект <see cref="Call"/>, содержащий обновленные данные.</param>
+    /// <param name="cancellationToken">Токен для отслеживания запросов на отмену.</param>
+    /// <returns>Задача, представляющая асинхронную операцию.</returns>
     Task UpdateCallAsync(Call call, CancellationToken cancellationToken);
 
     /// <summary>
-    /// Deletes a specific call record by its ID asynchronously.
+    /// Асинхронно удаляет конкретный звонок по его ID.
     /// </summary>
-    /// <param name="id">The ID of the call to delete.</param>
-    /// <param name="cancellationToken">A token to monitor for cancellation requests.</param>
-    /// <returns>A task representing the asynchronous operation.</returns>
+    /// <param name="id">ID звонка, который нужно удалить.</param>
+    /// <param name="cancellationToken">Токен для отслеживания запросов на отмену.</param>
+    /// <returns>Задача, представляющая асинхронную операцию.</returns>
     Task DeleteCallAsync(long id, CancellationToken cancellationToken);
 }

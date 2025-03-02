@@ -3,48 +3,48 @@
 namespace Lipsoft.Data.Repositories;
 
 /// <summary>
-/// Defines the contract for the repository responsible for managing credit product data.
+/// Определяет контракт для репозитория, ответственного за управление данными кредитных продуктов.
 /// </summary>
 public interface ICreditProductRepository
 {
     /// <summary>
-    /// Retrieves a list of credit products asynchronously, with support for pagination.
+    /// Асинхронно извлекает список кредитных продуктов с поддержкой пагинации.
     /// </summary>
-    /// <param name="offset">The number of items to skip (offset) for pagination.</param>
-    /// <param name="size">The number of items to retrieve (size) for pagination.</param>
-    /// <param name="cancellationToken">A token to monitor for cancellation requests.</param>
-    /// <returns>A task representing the asynchronous operation, with an <see cref="IAsyncEnumerable{CreditProduct}"/> as the result.</returns>
+    /// <param name="offset">Количество элементов, которые нужно пропустить (смещение) для пагинации.</param>
+    /// <param name="size">Количество элементов для извлечения (размер) при пагинации.</param>
+    /// <param name="cancellationToken">Токен для отслеживания запросов на отмену.</param>
+    /// <returns>Задача, представляющая асинхронную операцию, с результатом в виде <see cref="IAsyncEnumerable{CreditProduct}"/>.</returns>
     IAsyncEnumerable<CreditProduct> GetCreditProductsAsync(int offset, int size, CancellationToken cancellationToken);
 
     /// <summary>
-    /// Retrieves a specific credit product by its ID asynchronously.
+    /// Асинхронно извлекает конкретный кредитный продукт по его ID.
     /// </summary>
-    /// <param name="id">The ID of the credit product to retrieve.</param>
-    /// <param name="cancellationToken">A token to monitor for cancellation requests.</param>
-    /// <returns>A task representing the asynchronous operation, with a <see cref="CreditProduct"/> as the result, or null if not found.</returns>
+    /// <param name="id">ID кредитного продукта, который нужно извлечь.</param>
+    /// <param name="cancellationToken">Токен для отслеживания запросов на отмену.</param>
+    /// <returns>Задача, представляющая асинхронную операцию, с результатом в виде <see cref="CreditProduct"/> или null, если не найдено.</returns>
     Task<CreditProduct?> GetCreditProductByIdAsync(long id, CancellationToken cancellationToken);
 
     /// <summary>
-    /// Adds a new credit product record to the database asynchronously.
+    /// Асинхронно добавляет новый кредитный продукт в базу данных.
     /// </summary>
-    /// <param name="creditProduct">The <see cref="CreditProduct"/> object to be added.</param>
-    /// <param name="cancellationToken">A token to monitor for cancellation requests.</param>
-    /// <returns>A task representing the asynchronous operation, with the ID of the newly created credit product as the result.</returns>
+    /// <param name="creditProduct">Объект <see cref="CreditProduct"/>, который нужно добавить.</param>
+    /// <param name="cancellationToken">Токен для отслеживания запросов на отмену.</param>
+    /// <returns>Задача, представляющая асинхронную операцию, с ID нового кредитного продукта в качестве результата.</returns>
     Task<long> AddCreditProductAsync(CreditProduct creditProduct, CancellationToken cancellationToken);
 
     /// <summary>
-    /// Updates an existing credit product record in the database asynchronously.
+    /// Асинхронно обновляет существующий кредитный продукт в базе данных.
     /// </summary>
-    /// <param name="creditProduct">The <see cref="CreditProduct"/> object containing updated data.</param>
-    /// <param name="cancellationToken">A token to monitor for cancellation requests.</param>
-    /// <returns>A task representing the asynchronous operation.</returns>
+    /// <param name="creditProduct">Объект <see cref="CreditProduct"/>, содержащий обновленные данные.</param>
+    /// <param name="cancellationToken">Токен для отслеживания запросов на отмену.</param>
+    /// <returns>Задача, представляющая асинхронную операцию.</returns>
     Task UpdateCreditProductAsync(CreditProduct creditProduct, CancellationToken cancellationToken);
 
     /// <summary>
-    /// Deletes a specific credit product record by its ID asynchronously.
+    /// Асинхронно удаляет конкретный кредитный продукт по его ID.
     /// </summary>
-    /// <param name="id">The ID of the credit product to delete.</param>
-    /// <param name="cancellationToken">A token to monitor for cancellation requests.</param>
-    /// <returns>A task representing the asynchronous operation.</returns>
+    /// <param name="id">ID кредитного продукта, который нужно удалить.</param>
+    /// <param name="cancellationToken">Токен для отслеживания запросов на отмену.</param>
+    /// <returns>Задача, представляющая асинхронную операцию.</returns>
     Task DeleteCreditProductAsync(long id, CancellationToken cancellationToken);
 }

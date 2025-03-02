@@ -4,48 +4,48 @@ using Lipsoft.Data.Models;
 namespace Lipsoft.BLL.Interfaces;
 
 /// <summary>
-/// Defines the service interface for handling operations related to credit applications.
+/// Определяет интерфейс сервиса для выполнения операций, связанных с заявками на кредиты.
 /// </summary>
 public interface ICreditApplicationService
 {
     /// <summary>
-    /// Retrieves a collection of credit applications based on the provided filter criteria.
+    /// Получает коллекцию заявок на кредит, основанную на предоставленных критериях фильтрации.
     /// </summary>
-    /// <param name="filter">The filter criteria to apply when retrieving the credit applications.</param>
-    /// <param name="cancellationToken">The token to monitor for cancellation requests.</param>
-    /// <returns>A <see cref="Result"/> containing a collection of credit applications, or a failure result if the operation fails.</returns>
+    /// <param name="filter">Критерии фильтрации, которые необходимо применить при получении заявок на кредит.</param>
+    /// <param name="cancellationToken">Токен для отслеживания запросов на отмену.</param>
+    /// <returns>Результат <see cref="Result"/>, содержащий коллекцию заявок на кредит, или результат неудачи, если операция не удалась.</returns>
     Task<Result<IAsyncEnumerable<CreditApplication>>> GetCreditApplicationsAsync(CreditApplicationFilter filter, CancellationToken cancellationToken);
 
     /// <summary>
-    /// Retrieves a specific credit application by its unique identifier.
+    /// Получает конкретную заявку на кредит по её уникальному идентификатору.
     /// </summary>
-    /// <param name="id">The unique identifier of the credit application.</param>
-    /// <param name="cancellationToken">The token to monitor for cancellation requests.</param>
-    /// <returns>A <see cref="Result"/> containing the credit application, or a failure result if the credit application was not found.</returns>
+    /// <param name="id">Уникальный идентификатор заявки на кредит.</param>
+    /// <param name="cancellationToken">Токен для отслеживания запросов на отмену.</param>
+    /// <returns>Результат <see cref="Result"/>, содержащий заявку на кредит, или результат неудачи, если заявка не найдена.</returns>
     Task<Result<CreditApplication?>> GetCreditApplicationByIdAsync(long id, CancellationToken cancellationToken);
 
     /// <summary>
-    /// Adds a new credit application to the system. 
-    /// A call is also created automatically when a credit application is added, scheduled for a future date.
+    /// Добавляет новую заявку на кредит в систему.
+    /// Также автоматически создается звонок, запланированный на будущую дату, когда добавляется заявка на кредит.
     /// </summary>
-    /// <param name="creditApplication">The credit application to be added.</param>
-    /// <param name="cancellationToken">The token to monitor for cancellation requests.</param>
-    /// <returns>A <see cref="Result"/> containing the ID of the newly created credit application, or a failure result if the operation fails.</returns>
+    /// <param name="creditApplication">Заявка на кредит, которую нужно добавить.</param>
+    /// <param name="cancellationToken">Токен для отслеживания запросов на отмену.</param>
+    /// <returns>Результат <see cref="Result"/>, содержащий ID новой заявки на кредит, или результат неудачи, если операция не удалась.</returns>
     Task<Result<long>> AddCreditApplicationAsync(CreditApplication creditApplication, CancellationToken cancellationToken);
 
     /// <summary>
-    /// Updates an existing credit application in the system.
+    /// Обновляет существующую заявку на кредит в системе.
     /// </summary>
-    /// <param name="creditApplication">The credit application with updated information.</param>
-    /// <param name="cancellationToken">The token to monitor for cancellation requests.</param>
-    /// <returns>A <see cref="Result"/> containing the updated credit application, or a failure result if the operation fails.</returns>
+    /// <param name="creditApplication">Заявка на кредит с обновленной информацией.</param>
+    /// <param name="cancellationToken">Токен для отслеживания запросов на отмену.</param>
+    /// <returns>Результат <see cref="Result"/>, содержащий обновленную заявку на кредит, или результат неудачи, если операция не удалась.</returns>
     Task<Result<CreditApplication?>> UpdateCreditApplicationAsync(CreditApplication creditApplication, CancellationToken cancellationToken);
 
     /// <summary>
-    /// Deletes a credit application by its unique identifier.
+    /// Удаляет заявку на кредит по её уникальному идентификатору.
     /// </summary>
-    /// <param name="id">The unique identifier of the credit application to be deleted.</param>
-    /// <param name="cancellationToken">The token to monitor for cancellation requests.</param>
-    /// <returns>A <see cref="Result"/> indicating whether the deletion was successful, or a failure result if the operation fails.</returns>
+    /// <param name="id">Уникальный идентификатор заявки на кредит для удаления.</param>
+    /// <param name="cancellationToken">Токен для отслеживания запросов на отмену.</param>
+    /// <returns>Результат <see cref="Result"/>, который указывает, была ли операция удаления успешной, или результат неудачи, если операция не удалась.</returns>
     Task<Result<bool>> DeleteCreditApplicationAsync(long id, CancellationToken cancellationToken);
 }

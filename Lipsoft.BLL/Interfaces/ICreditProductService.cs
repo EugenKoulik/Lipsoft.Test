@@ -4,48 +4,48 @@ using Lipsoft.Data.Models;
 namespace Lipsoft.BLL.Interfaces;
 
 /// <summary>
-/// Defines the service interface for handling operations related to credit products.
+/// Определяет интерфейс сервиса для выполнения операций, связанных с кредитными продуктами.
 /// </summary>
 public interface ICreditProductService
 {
     /// <summary>
-    /// Retrieves a specific credit product by its unique identifier.
+    /// Получает конкретный кредитный продукт по его уникальному идентификатору.
     /// </summary>
-    /// <param name="id">The unique identifier of the credit product.</param>
-    /// <param name="cancellationToken">The token to monitor for cancellation requests.</param>
-    /// <returns>A <see cref="Result"/> containing the credit product, or a failure result if the credit product was not found.</returns>
+    /// <param name="id">Уникальный идентификатор кредитного продукта.</param>
+    /// <param name="cancellationToken">Токен для отслеживания запросов на отмену.</param>
+    /// <returns>Результат <see cref="Result"/>, содержащий кредитный продукт, или результат неудачи, если кредитный продукт не найден.</returns>
     Task<Result<CreditProduct?>> GetCreditProductByIdAsync(long id, CancellationToken cancellationToken);
 
     /// <summary>
-    /// Retrieves a collection of credit products with pagination support.
+    /// Получает коллекцию кредитных продуктов с поддержкой пагинации.
     /// </summary>
-    /// <param name="offset">The starting index of the credit products to retrieve.</param>
-    /// <param name="size">The number of credit products to retrieve.</param>
-    /// <param name="cancellationToken">The token to monitor for cancellation requests.</param>
-    /// <returns>A <see cref="Result"/> containing a collection of credit products, or a failure result if the operation fails.</returns>
+    /// <param name="offset">Начальный индекс кредитных продуктов для получения.</param>
+    /// <param name="size">Количество кредитных продуктов для получения.</param>
+    /// <param name="cancellationToken">Токен для отслеживания запросов на отмену.</param>
+    /// <returns>Результат <see cref="Result"/>, содержащий коллекцию кредитных продуктов, или результат неудачи, если операция не удалась.</returns>
     Task<Result<IAsyncEnumerable<CreditProduct>>> GetCreditProductsAsync(int offset, int size, CancellationToken cancellationToken);
 
     /// <summary>
-    /// Adds a new credit product to the system.
+    /// Добавляет новый кредитный продукт в систему.
     /// </summary>
-    /// <param name="creditProduct">The credit product to be added.</param>
-    /// <param name="cancellationToken">The token to monitor for cancellation requests.</param>
-    /// <returns>A <see cref="Result"/> containing the ID of the newly created credit product, or a failure result if the operation fails.</returns>
+    /// <param name="creditProduct">Кредитный продукт, который нужно добавить.</param>
+    /// <param name="cancellationToken">Токен для отслеживания запросов на отмену.</param>
+    /// <returns>Результат <see cref="Result"/>, содержащий ID нового кредитного продукта, или результат неудачи, если операция не удалась.</returns>
     Task<Result<long>> AddCreditProductAsync(CreditProduct creditProduct, CancellationToken cancellationToken);
 
     /// <summary>
-    /// Updates an existing credit product in the system.
+    /// Обновляет существующий кредитный продукт в системе.
     /// </summary>
-    /// <param name="creditProduct">The credit product with updated information.</param>
-    /// <param name="cancellationToken">The token to monitor for cancellation requests.</param>
-    /// <returns>A <see cref="Result"/> containing the updated credit product, or a failure result if the operation fails.</returns>
+    /// <param name="creditProduct">Кредитный продукт с обновленной информацией.</param>
+    /// <param name="cancellationToken">Токен для отслеживания запросов на отмену.</param>
+    /// <returns>Результат <see cref="Result"/>, содержащий обновленный кредитный продукт, или результат неудачи, если операция не удалась.</returns>
     Task<Result<CreditProduct?>> UpdateCreditProductAsync(CreditProduct creditProduct, CancellationToken cancellationToken);
 
     /// <summary>
-    /// Deletes a credit product by its unique identifier.
+    /// Удаляет кредитный продукт по его уникальному идентификатору.
     /// </summary>
-    /// <param name="id">The unique identifier of the credit product to be deleted.</param>
-    /// <param name="cancellationToken">The token to monitor for cancellation requests.</param>
-    /// <returns>A <see cref="Result"/> indicating whether the deletion was successful, or a failure result if the operation fails.</returns>
+    /// <param name="id">Уникальный идентификатор кредитного продукта для удаления.</param>
+    /// <param name="cancellationToken">Токен для отслеживания запросов на отмену.</param>
+    /// <returns>Результат <see cref="Result"/>, который указывает, была ли операция удаления успешной, или результат неудачи, если операция не удалась.</returns>
     Task<Result<bool>> DeleteCreditProductAsync(long id, CancellationToken cancellationToken);
 }

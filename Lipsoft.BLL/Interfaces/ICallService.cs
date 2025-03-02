@@ -4,48 +4,48 @@ using Lipsoft.Data.Models;
 namespace Lipsoft.BLL.Interfaces;
 
 /// <summary>
-/// Defines the service interface for handling operations related to calls.
+/// Определяет интерфейс сервиса для выполнения операций, связанных с звонками.
 /// </summary>
 public interface ICallService
 {
     /// <summary>
-    /// Retrieves a call by its unique identifier.
+    /// Получает звонок по его уникальному идентификатору.
     /// </summary>
-    /// <param name="id">The unique identifier of the call.</param>
-    /// <param name="cancellationToken">The token to monitor for cancellation requests.</param>
-    /// <returns>A <see cref="Result"/> containing the call, or a failure result if the call was not found.</returns>
+    /// <param name="id">Уникальный идентификатор звонка.</param>
+    /// <param name="cancellationToken">Токен для отслеживания запросов на отмену.</param>
+    /// <returns>Результат <see cref="Result"/>, содержащий звонок, или результат неудачи, если звонок не найден.</returns>
     Task<Result<Call?>> GetCallByIdAsync(long id, CancellationToken cancellationToken);
 
     /// <summary>
-    /// Retrieves a list of calls with pagination.
+    /// Получает список звонков с пагинацией.
     /// </summary>
-    /// <param name="offset">The number of records to skip.</param>
-    /// <param name="size">The number of records to retrieve.</param>
-    /// <param name="cancellationToken">The token to monitor for cancellation requests.</param>
-    /// <returns>A <see cref="Result"/> containing an <see cref="IAsyncEnumerable{Call}"/> of calls, or a failure result if the operation fails.</returns>
+    /// <param name="offset">Количество записей для пропуска.</param>
+    /// <param name="size">Количество записей для получения.</param>
+    /// <param name="cancellationToken">Токен для отслеживания запросов на отмену.</param>
+    /// <returns>Результат <see cref="Result"/>, содержащий <see cref="IAsyncEnumerable{Call}"/> звонков, или результат неудачи, если операция не удалась.</returns>
     Task<Result<IAsyncEnumerable<Call>>> GetCallsAsync(int offset, int size, CancellationToken cancellationToken);
 
     /// <summary>
-    /// Adds a new call to the system.
+    /// Добавляет новый звонок в систему.
     /// </summary>
-    /// <param name="call">The call to be added.</param>
-    /// <param name="cancellationToken">The token to monitor for cancellation requests.</param>
-    /// <returns>A <see cref="Result"/> containing the ID of the newly created call, or a failure result if the operation fails.</returns>
+    /// <param name="call">Звонок, который нужно добавить.</param>
+    /// <param name="cancellationToken">Токен для отслеживания запросов на отмену.</param>
+    /// <returns>Результат <see cref="Result"/>, содержащий ID нового звонка, или результат неудачи, если операция не удалась.</returns>
     Task<Result<long>> AddCallAsync(Call call, CancellationToken cancellationToken);
 
     /// <summary>
-    /// Updates an existing call in the system.
+    /// Обновляет существующий звонок в системе.
     /// </summary>
-    /// <param name="call">The call with updated information.</param>
-    /// <param name="cancellationToken">The token to monitor for cancellation requests.</param>
-    /// <returns>A <see cref="Result"/> containing the updated call, or a failure result if the operation fails.</returns>
+    /// <param name="call">Звонок с обновленной информацией.</param>
+    /// <param name="cancellationToken">Токен для отслеживания запросов на отмену.</param>
+    /// <returns>Результат <see cref="Result"/>, содержащий обновленный звонок, или результат неудачи, если операция не удалась.</returns>
     Task<Result<Call?>> UpdateCallAsync(Call call, CancellationToken cancellationToken);
 
     /// <summary>
-    /// Deletes a call by its unique identifier.
+    /// Удаляет звонок по его уникальному идентификатору.
     /// </summary>
-    /// <param name="id">The unique identifier of the call to be deleted.</param>
-    /// <param name="cancellationToken">The token to monitor for cancellation requests.</param>
-    /// <returns>A <see cref="Result"/> indicating whether the deletion was successful, or a failure result if the operation fails.</returns>
+    /// <param name="id">Уникальный идентификатор звонка для удаления.</param>
+    /// <param name="cancellationToken">Токен для отслеживания запросов на отмену.</param>
+    /// <returns>Результат <see cref="Result"/>, который указывает, была ли операция удаления успешной, или результат неудачи, если операция не удалась.</returns>
     Task<Result<bool>> DeleteCallAsync(long id, CancellationToken cancellationToken);
 }

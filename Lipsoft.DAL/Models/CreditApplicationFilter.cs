@@ -3,32 +3,32 @@
 public class CreditApplicationFilter
 {
     /// <summary>
-    /// Gets or sets the loan purpose filter for the credit applications.
+    /// Получает или устанавливает фильтр по цели кредита для заявок на кредит.
     /// </summary>
     public LoanPurpose? LoanPurpose { get; set; } 
 
     /// <summary>
-    /// Gets or sets the credit product ID filter for the credit applications.
+    /// Получает или устанавливает фильтр по ID кредитного продукта для заявок на кредит.
     /// </summary>
     public long? CreditProductId { get; set; }
 
     /// <summary>
-    /// Gets or sets the minimum loan amount filter for the credit applications.
+    /// Получает или устанавливает фильтр по минимальной сумме кредита для заявок на кредит.
     /// </summary>
     public decimal? MinLoanAmount { get; set; } 
 
     /// <summary>
-    /// Gets or sets the maximum loan amount filter for the credit applications.
+    /// Получает или устанавливает фильтр по максимальной сумме кредита для заявок на кредит.
     /// </summary>
     public decimal? MaxLoanAmount { get; set; } 
 
     /// <summary>
-    /// Gets or sets the size of the page (number of records per page) for pagination.
+    /// Получает или устанавливает размер страницы (количество записей на странице) для пагинации.
     /// </summary>
     public int Size { get; set; }
 
     /// <summary>
-    /// Gets or sets the offset (number of records to skip) for pagination.
+    /// Получает или устанавливает смещение (количество записей для пропуска) для пагинации.
     /// </summary>
     public int Offset { get; set; } 
 }

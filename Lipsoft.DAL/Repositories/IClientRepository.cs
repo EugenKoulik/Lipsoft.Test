@@ -3,39 +3,39 @@
 namespace Lipsoft.Data.Repositories;
 
 /// <summary>
-/// Defines the contract for the repository responsible for managing client data.
+/// Определяет контракт для репозитория, ответственного за управление данными клиентов.
 /// </summary>
 public interface IClientRepository
 {
     /// <summary>
-    /// Retrieves a specific client by its ID asynchronously.
+    /// Асинхронно извлекает конкретного клиента по его ID.
     /// </summary>
-    /// <param name="id">The ID of the client to retrieve.</param>
-    /// <param name="cancellationToken">A token to monitor for cancellation requests.</param>
-    /// <returns>A task representing the asynchronous operation, with a <see cref="Client"/> as the result, or null if not found.</returns>
+    /// <param name="id">ID клиента, которого нужно извлечь.</param>
+    /// <param name="cancellationToken">Токен для отслеживания запросов на отмену.</param>
+    /// <returns>Задача, представляющая асинхронную операцию, с результатом в виде <see cref="Client"/> или null, если не найдено.</returns>
     Task<Client?> GetClientByIdAsync(long id, CancellationToken cancellationToken);
 
     /// <summary>
-    /// Adds a new client record to the database asynchronously.
+    /// Асинхронно добавляет новую запись о клиенте в базу данных.
     /// </summary>
-    /// <param name="client">The <see cref="Client"/> object to be added.</param>
-    /// <param name="cancellationToken">A token to monitor for cancellation requests.</param>
-    /// <returns>A task representing the asynchronous operation, with the ID of the newly created client as the result.</returns>
+    /// <param name="client">Объект <see cref="Client"/>, который нужно добавить.</param>
+    /// <param name="cancellationToken">Токен для отслеживания запросов на отмену.</param>
+    /// <returns>Задача, представляющая асинхронную операцию, с ID нового клиента в качестве результата.</returns>
     Task<long> AddClientAsync(Client client, CancellationToken cancellationToken);
 
     /// <summary>
-    /// Updates an existing client record in the database asynchronously.
+    /// Асинхронно обновляет существующую запись о клиенте в базе данных.
     /// </summary>
-    /// <param name="client">The <see cref="Client"/> object containing updated data.</param>
-    /// <param name="cancellationToken">A token to monitor for cancellation requests.</param>
-    /// <returns>A task representing the asynchronous operation.</returns>
+    /// <param name="client">Объект <see cref="Client"/>, содержащий обновленные данные.</param>
+    /// <param name="cancellationToken">Токен для отслеживания запросов на отмену.</param>
+    /// <returns>Задача, представляющая асинхронную операцию.</returns>
     Task UpdateClientAsync(Client client, CancellationToken cancellationToken);
 
     /// <summary>
-    /// Deletes a specific client record by its ID asynchronously.
+    /// Асинхронно удаляет конкретную запись о клиенте по его ID.
     /// </summary>
-    /// <param name="id">The ID of the client to delete.</param>
-    /// <param name="cancellationToken">A token to monitor for cancellation requests.</param>
-    /// <returns>A task representing the asynchronous operation.</returns>
+    /// <param name="id">ID клиента, которого нужно удалить.</param>
+    /// <param name="cancellationToken">Токен для отслеживания запросов на отмену.</param>
+    /// <returns>Задача, представляющая асинхронную операцию.</returns>
     Task DeleteClientAsync(long id, CancellationToken cancellationToken);
 }
